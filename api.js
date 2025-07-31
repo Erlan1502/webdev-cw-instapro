@@ -1,6 +1,7 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
+// Сменил ключ
+const personalKey = "my-unique-instapro-key";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
@@ -65,5 +66,29 @@ export function uploadImage({ file }) {
     body: data,
   }).then((response) => {
     return response.json();
+  });
+}
+
+// Добавляем новую функцию для добавления поста
+export function addPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json", 
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+  })
+  .then((response) => {
+    if (response.status === 400) {
+      return response.json().then(err => { throw new Error(err.message || "Некорректные данные для поста"); });
+    }
+    if (response.status === 401) {
+      throw new Error("Не авторизован");
+    }
+    return response.json(); // { "result": "ok" }
   });
 }

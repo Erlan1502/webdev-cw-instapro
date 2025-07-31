@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, addPost } from "./api.js"; // addPost импортирован
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -110,9 +110,26 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
+        //отладка
+        console.log("Значение description перед отправкой:", description); 
+        console.log("Значение imageUrl перед отправкой:", imageUrl);     
+        console.log("Значение токена перед отправкой:", getToken());      
+
         // @TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
+        // Функция для добавления addPost
+        addPost({
+          token: getToken(), // Получаем токен авторизации
+          description,
+          imageUrl,
+        })
+          .then(() => {
+            console.log("Пост успешно добавлен!");
+            goToPage(POSTS_PAGE);
+          })
+          .catch((error) => {
+            console.error("Ошибка при добавлении поста:", error);
+            alert("Не удалось добавить пост: " + error.message);
+          });
       },
     });
   }
