@@ -91,11 +91,23 @@
   padding-left: 0px;
   padding-bottom: 5px;
   cursor: pointer;
+  transition: transform 0.1s ease-in-out; 
 }
 
-.-active {
-  background-color: red;
+.like-button:hover {
+  transform: scale(1.1); 
+  opacity: 0.8;
 }
+
+.like-button:active {
+  transform: scale(0.9);
+}
+
+.like-button.-active {
+  background-color: #ff0000; 
+  border-radius: 50%;
+}
+
 
 .user-name {
   font-weight: 500;
