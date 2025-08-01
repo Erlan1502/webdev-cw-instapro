@@ -3,6 +3,8 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js"; // posts - массив постов
 import { likePost, dislikePost } from "../api.js";
 import { getToken } from "../index.js";
+import { formatDistanceToNow } from 'date-fns';
+import { ru } from "date-fns/locale";
 export function renderPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts); // Отладка
 
@@ -11,8 +13,7 @@ export function renderPostsPageComponent({ appEl }) {
 
   const postsHtml = posts.map((post) => {
     const postDate = new Date(post.createdAt);
-    // ПОКА ПРОСТО ВЫВОДИТСЯ ДАТА
-    const formattedDate = postDate.toLocaleDateString() + ' ' + postDate.toLocaleTimeString();
+    const formattedDate = formatDistanceToNow(postDate, { addSuffix: true, locale: ru });
 
     //ДОДЕЛАТЬ ЛАЙКИ
     const isLikedClass = post.isLiked ? '-active' : ''; 

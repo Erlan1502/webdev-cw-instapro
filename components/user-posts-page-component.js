@@ -2,7 +2,8 @@ import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { likePost, dislikePost } from "../api.js";
-
+import { formatDistanceToNow } from 'date-fns';
+import { ru } from "date-fns/locale";
 export function renderUserPostsPageComponent({ appEl }) {
   
   if (posts.length === 0) {
@@ -24,7 +25,7 @@ export function renderUserPostsPageComponent({ appEl }) {
 
   const postsHtml = posts.map((post) => {
     const postDate = new Date(post.createdAt);
-    const formattedDate = postDate.toLocaleDateString() + ' ' + postDate.toLocaleTimeString();
+    const formattedDate = formatDistanceToNow(postDate, { addSuffix: true, locale: ru });
     const isLikedClass = post.isLiked ? '-active' : '';
     const likeImageSrc = post.isLiked ? './assets/images/like-active.svg' : './assets/images/like-not-active.svg';
     const likesCount = post.likes ? post.likes.length : 0;
