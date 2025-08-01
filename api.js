@@ -108,3 +108,21 @@ export function dislikePost({ token, postId }) {
     },
   }).then((response) => response.json());
 }
+// Страница отдельного пользователя
+export function getUserPosts({ token, userId }) {
+  return fetch(`${postsHost}/user-posts/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
