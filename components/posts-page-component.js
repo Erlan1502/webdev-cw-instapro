@@ -1,7 +1,8 @@
-import { USER_POSTS_PAGE } from "../routes.js";
+import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js"; // posts - массив постов
-
+import { likePost, dislikePost } from "../api.js";
+import { getToken } from "../index.js";
 export function renderPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts); // Отладка
 
@@ -66,4 +67,28 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+  for (const likeButton of document.querySelectorAll(".like-button")) {
+  likeButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    const postId = likeButton.dataset.postId;
+    const post = posts.find(p => p.id === postId);
+
+    const handleLike = () => {
+      if (post.isLiked) {
+        dislikePost({ token: getToken(), postId })
+          .then(() => {
+            goToPage(POSTS_PAGE); 
+          });
+      } else {
+        likePost({ token: getToken(), postId })
+          .then(() => {
+            goToPage(POSTS_PAGE); 
+          });
+      }
+    };
+
+    handleLike();
+  });
+}
 }

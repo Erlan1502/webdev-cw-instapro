@@ -103,12 +103,6 @@
   transform: scale(0.9);
 }
 
-.like-button.-active {
-  background-color: #ff0000; 
-  border-radius: 50%;
-}
-
-
 .user-name {
   font-weight: 500;
 }

@@ -2,7 +2,7 @@
 // "боевая" версия инстапро лежит в ключе prod
 // Сменил ключ
 const personalKey = "my-unique-instapro-key";
-const baseHost = "https://webdev-hw-api.vercel.app";
+const baseHost = "https://wedev-api.sky.pro"; //Добавлено согласно документации.
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
@@ -90,4 +90,21 @@ export function addPost({ token, description, imageUrl }) {
     }
     return response.json(); // { "result": "ok" }
   });
+}
+//Обработка лайков с сервера
+export function likePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => response.json());
+}
+export function dislikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => response.json());
 }
