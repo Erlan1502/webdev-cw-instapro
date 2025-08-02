@@ -2,8 +2,8 @@ import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { likePost, dislikePost } from "../api.js";
-import { formatDistanceToNow } from 'date-fns';
-import { ru } from "date-fns/locale";
+import { formatDistanceToNow } from 'https://cdn.skypack.dev/date-fns';
+import { ru } from 'https://cdn.skypack.dev/date-fns/locale';
 export function renderUserPostsPageComponent({ appEl }) {
   
   if (posts.length === 0) {

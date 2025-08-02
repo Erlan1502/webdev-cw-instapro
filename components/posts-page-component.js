@@ -3,8 +3,8 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js"; // posts - массив постов
 import { likePost, dislikePost } from "../api.js";
 import { getToken } from "../index.js";
-import { formatDistanceToNow } from 'date-fns';
-import { ru } from "date-fns/locale";
+import { formatDistanceToNow } from 'https://cdn.skypack.dev/date-fns';
+import { ru } from 'https://cdn.skypack.dev/date-fns/locale';
 export function renderPostsPageComponent({ appEl }) {
   console.log("Актуальный список постов:", posts); // Отладка
 
@@ -14,8 +14,6 @@ export function renderPostsPageComponent({ appEl }) {
   const postsHtml = posts.map((post) => {
     const postDate = new Date(post.createdAt);
     const formattedDate = formatDistanceToNow(postDate, { addSuffix: true, locale: ru });
-
-    //ДОДЕЛАТЬ ЛАЙКИ
     const isLikedClass = post.isLiked ? '-active' : ''; 
     const likeImageSrc = post.isLiked ? './assets/images/like-active.svg' : './assets/images/like-not-active.svg'; 
     const likesCount = post.likes ? post.likes.length : 0; 
