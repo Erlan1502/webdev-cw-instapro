@@ -66,28 +66,32 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+  // Заменяю goToPage -> на обновление только лишь компонента
   for (const likeButton of document.querySelectorAll(".like-button")) {
-  likeButton.addEventListener("click", (event) => {
-    event.stopPropagation();
-
-    const postId = likeButton.dataset.postId;
-    const post = posts.find(p => p.id === postId);
-
-    const handleLike = () => {
-      if (post.isLiked) {
-        dislikePost({ token: getToken(), postId })
-          .then(() => {
-            goToPage(POSTS_PAGE); 
+    likeButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const postId = likeButton.dataset.postId;
+      const post = posts.find((p) => p.id === postId);
+  
+      const handleLike = () => {
+      let apiCall;
+        if(post.isLiked){
+          apiCall=dislikePost;
+        }
+        else{
+          apiCall=likePost;
+        }
+        apiCall({ token: getToken(), postId })
+          .then((updatedPostResponse) => {
+            const postIndex = posts.findIndex((p) => p.id === postId);
+            if (postIndex !== -1) {
+              posts[postIndex] = updatedPostResponse.post;
+            }
+            renderPostsPageComponent({ appEl });
           });
-      } else {
-        likePost({ token: getToken(), postId })
-          .then(() => {
-            goToPage(POSTS_PAGE); 
-          });
-      }
-    };
-
-    handleLike();
-  });
-}
+      };
+  
+      handleLike();
+    });
+  }
 }

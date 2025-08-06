@@ -81,15 +81,22 @@ export function renderUserPostsPageComponent({ appEl }) {
       const post = posts.find(p => p.id === postId);
 
       const handleLike = () => {
-        if (post.isLiked) {
-          dislikePost({ token: getToken(), postId }).then(() => {
-            goToPage(USER_POSTS_PAGE, { userId: post.user.id }); 
-          });
-        } else {
-          likePost({ token: getToken(), postId }).then(() => {
-            goToPage(USER_POSTS_PAGE, { userId: post.user.id }); 
-          });
+      let apiCall;
+        if(post.isLiked){
+          apiCall=dislikePost;
         }
+        else{
+          apiCall=likePost;
+        }
+
+        apiCall({ token: getToken(), postId })
+          .then((updatedPostResponse) => {
+            const postIndex = posts.findIndex((p) => p.id === postId);
+            if (postIndex !== -1) {
+              posts[postIndex] = updatedPostResponse.post;
+            }
+            renderUserPostsPageComponent({ appEl });
+          });
       };
 
       handleLike();
