@@ -1,7 +1,8 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+// Сменил ключ
+const personalKey = "my-unique-instapro-key";
+const baseHost = "https://wedev-api.sky.pro"; //Добавлено согласно документации.
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
@@ -66,4 +67,62 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+
+// Добавляем новую функцию для добавления поста upd 2 : Убрал Content-Type - заработало.
+export function addPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token 
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+  })
+  .then((response) => {
+    if (response.status === 400) {
+      return response.json().then(err => { throw new Error(err.message || "Некорректные данные для поста"); });
+    }
+    if (response.status === 401) {
+      throw new Error("Не авторизован");
+    }
+    return response.json(); // { "result": "ok" }
+  });
+}
+//Обработка лайков с сервера
+export function likePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => response.json());
+}
+export function dislikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => response.json());
+}
+// Страница отдельного пользователя
+export function getUserPosts({ token, userId }) {
+  return fetch(`${postsHost}/user-posts/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
 }
